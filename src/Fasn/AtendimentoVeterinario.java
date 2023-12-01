@@ -1,8 +1,10 @@
 package Fasn;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AtendimentoVeterinario implements Evento {
+	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private int id;
 	private Veterinario veterinario;
 	private Animal paciente;
@@ -20,12 +22,20 @@ public class AtendimentoVeterinario implements Evento {
 	public String getComentariosVeterinario() {return comentariosVeterinario;}
 	public void setComentariosVeterinario(String comentariosVeterinario) {this.comentariosVeterinario = comentariosVeterinario;}
 
-
-
+	public AtendimentoVeterinario(int id, Veterinario veterinario, Animal paciente, LocalDateTime dataHorario,
+			String comentariosVeterinario) 
+		{this.id = id;
+		 this.veterinario = veterinario;
+		 this.paciente = paciente;
+		 this.dataHorario = dataHorario;
+		 this.comentariosVeterinario = comentariosVeterinario;}
+	
 	@Override
 	public void printLineEvento() {
-		// TODO Auto-generated method stub
-		
+		System.out.println(getDataHorario().format(formatter)+": Atendimento Veterinário");
+		System.out.println("\t Veterinário:"+getVeterinario().getNome());
+		System.out.println("\t Paciente:"+getPaciente().getNome());
+		System.out.println("\t "+getComentariosVeterinario());
 	}
 
 }

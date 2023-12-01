@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class Conn {
+public class Conn implements AutoCloseable {
 	private static 
 		String url = "jdbc:mysql://mysql.purrfect.codes:3306/purrfect06",
 		user = "purrfect06",
@@ -18,6 +18,12 @@ public class Conn {
 	   	 catch (SQLException e) 
 		 	{System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());}
 		 }
+    @Override
+    public void close() throws SQLException 
+    	{if (conn!= null && !conn.isClosed()) 
+    		{conn.close();}}
+	
+	
 	
 	public boolean insert(String tabela, String[] campos, String[] valores)
 		{if (campos == null || valores == null || campos.length != valores.length) 
@@ -28,16 +34,16 @@ public class Conn {
 		 StringBuilder values= new StringBuilder("(");
 		 for (int i = 0; i < campos.length; i++) 
 		 	{sql.append(campos[i]+",");
-		 	 values.append("'"+valores[i]+"' ,");}
+		 	 values.append(valores[i]+",");}
 		 sql.deleteCharAt(sql.length() - 1);
 		 values.deleteCharAt(values.length() - 1);
-		 sql.append(")"+values+")");
+		 sql.append(") values "+values+")");
 		 try 
 			{PreparedStatement ps=conn.prepareStatement(sql.toString());
-			 return (ps.executeUpdate()==1);
-			 }
+			 return (ps.executeUpdate()==1);}
 		catch (SQLException e) 
 		 	{System.err.println("Erro ao inserir: " + e.getMessage());
+		 	 System.out.println(sql);
 		 	 return false;}
 		 }
 
@@ -48,7 +54,7 @@ public class Conn {
 	
 		 StringBuilder sql= new StringBuilder("update "+tabela+" set ");
 		 for (int i = 0; i < campos.length; i++) 
-		 	{sql.append(campos[i]+" = '"+valores[i]+"' ,");}
+		 	{sql.append(campos[i]+" = "+valores[i]+" ,");}
 		 sql.deleteCharAt(sql.length() - 1);
 		 sql.append(where);
 		 try 
@@ -68,6 +74,13 @@ public class Conn {
 	public boolean delete(String tabela, int id)
 		{return update(tabela, new String[]{"apagado"}, new String[]{"1"}, id);}
 
+	public int lastInsertId()
+		{try (ResultSet resultado = select("select LAST_INSERT_ID() as lastId");)
+			{if (resultado.next()) return resultado.getInt("lastId");
+			else return 0;}
+		 catch (SQLException e) 
+		 	{System.err.println("Erro ao encontrar o id inserido: " + e.getMessage());
+		 	 return 0;}}
 	
 	public ResultSet select(String sql)
 		{try 
@@ -75,6 +88,11 @@ public class Conn {
 			 return statem.executeQuery(sql);}
 		 catch (SQLException e) 
 		 	{System.err.println("Erro ao fazer o select: " + e.getMessage());
+		 	 System.out.println(sql);
 		 	 return null;}}
+
+	public ResultSet selectWhere(String tabela, String where, String limitOrder)
+		{return select("select * from "+tabela+" where "+where+" and Apagado=0 "+limitOrder);}
+	
 	
 }

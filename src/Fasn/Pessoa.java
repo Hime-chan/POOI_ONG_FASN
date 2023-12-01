@@ -19,5 +19,12 @@ public class Pessoa {
 	public void setTelefone(String telefone) {this.telefone = telefone;}
 	public String getGenero() {return genero;}
 	public void setGenero(String genero) {this.genero = genero;}
+	public Pessoa(int id, String nome, String email, String cPF, String telefone, String genero) 
+		{this.id = id;
+		 this.nome = nome;
+		 this.email = email;
+		 CPF = cPF;
+		 this.telefone = telefone;
+		 this.genero = genero;}
 		
 }

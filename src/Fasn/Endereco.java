@@ -1,8 +1,8 @@
 package Fasn;
 
 public class Endereco {
-	private String logradouro;
 	private int Id;
+	private String logradouro;
 	private int numero;
 	private String bairro;
 	private String CEP;
@@ -33,7 +33,17 @@ public class Endereco {
 				". Bairro " + bairro+", CEP "+CEP+
 				". Cidade " + cidade + " - " + estado;
 	}
+	public Endereco(int id, String logradouro, int numero, String bairro, String cEP, String complemento, String cidade,String estado) 
+		{this.logradouro = logradouro;
+		 this.Id = id;
+		 this.numero = numero;
+		 this.bairro = bairro;
+		 this.CEP = cEP;
+		 this.complemento = complemento;
+		 this.cidade = cidade;
+		 this.estado = estado;}
 	
+
 	
 	
 }
