@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 
 public class Conn implements AutoCloseable {
 	private static 
-		String url = "jdbc:mysql://mysql.purrfect.codes:3306/purrfect06",
-		user = "purrfect06",
-		password = "POO1ONGFASN";
+		String url = ""
+		user = "",
+		password = "";
 	private Connection conn = null;
 	
 	public Conn()
